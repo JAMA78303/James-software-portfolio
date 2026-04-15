@@ -690,25 +690,8 @@
     };
 
     const getAIReply = async (question) => {
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: question }),
-        });
-
-        if (!response.ok) {
-          throw new Error("AI request failed");
-        }
-
-        const data = await response.json();
-        if (data && typeof data.reply === "string" && data.reply.trim()) {
-          return data.reply.trim();
-        }
-        return helperReplyFallback(question);
-      } catch (error) {
-        return `${helperReplyFallback(question)} (Fallback mode: AI API not reachable yet.)`;
-      }
+      // GitHub Pages has no backend runtime, so we always use local replies.
+      return helperReplyFallback(question);
     };
 
     const addMessage = (message, role) => {
