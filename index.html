@@ -114,9 +114,11 @@ h3 small { font: 500 15px var(--body); color: var(--muted); letter-spacing: 0; m
 
 .shots { display: flex; gap: 14px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
 .shots figure { margin: 0; flex: 0 0 auto; width: 150px; display: grid; gap: 6px; }
+.shots figure.wide { width: 300px; }
+.shots figure.wide img { border-radius: 4px; }
 .shots img { width: 100%; height: auto; display: block; border-radius: 18px; border: 1px solid var(--line); background: var(--surface); }
 .shots figcaption { font: 400 12px/1.4 var(--body); color: var(--muted); }
-@media (max-width: 720px) { .shots figure { width: 128px; } }
+@media (max-width: 720px) { .shots figure { width: 128px; } .shots figure.wide { width: 250px; } }
 
 /* Featured rows get a little more room */
 .row.featured h3 { font-size: clamp(28px, 4vw, 36px); }
@@ -216,6 +218,10 @@ const projects = [
       "No backend: photos never leave the phone"
     ],
     stack: ["React Native", "Expo", "TypeScript", "Skia", "Reanimated"],
+    shots: [
+      ["img/postcard-front.jpg", "Front: the photo shows through the letters", "wide"],
+      ["img/postcard-back.jpg", "Back: message, postmark and stamp fill in", "wide"]
+    ],
     links: []
   },
   {
@@ -293,7 +299,7 @@ list.innerHTML = projects.map(p => `
       <h3>${esc(p.name)}<small>${esc(p.tag)}</small></h3>
       <p>${esc(p.desc)}</p>
       <ul>${p.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-      ${p.shots ? `<div class="shots">${p.shots.map(([src, cap]) => `<figure><img src="${src}" alt="${esc(p.name)}: ${esc(cap)}" loading="lazy" width="540" height="1170"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>` : ""}
+      ${p.shots ? `<div class="shots">${p.shots.map(([src, cap, wide]) => `<figure${wide ? ' class="wide"' : ""}><img src="${src}" alt="${esc(p.name)}: ${esc(cap)}" loading="lazy" width="${wide ? 800 : 540}" height="${wide ? 532 : 1170}"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>` : ""}
       <div class="stack">${p.stack.map(esc).join("<span aria-hidden='true'>·</span>")}</div>
     </div>
     <div class="links">${p.links.length
