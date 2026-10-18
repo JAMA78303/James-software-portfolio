@@ -299,7 +299,7 @@ list.innerHTML = projects.map(p => `
       <h3>${esc(p.name)}<small>${esc(p.tag)}</small></h3>
       <p>${esc(p.desc)}</p>
       <ul>${p.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-      ${p.shots ? `<div class="shots">${p.shots.map(([src, cap, wide]) => `<figure${wide ? ' class="wide"' : ""}><img src="${src}" alt="${esc(p.name)}: ${esc(cap)}" loading="lazy" width="${wide ? 800 : 540}" height="${wide ? 532 : 1170}"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>` : ""}
+      ${p.shots ? `<div class="shots">${p.shots.map(([src, cap, wide]) => `<figure${wide ? ' class="wide"' : ""}><img src="${src}" alt="${esc(p.name)}: ${esc(cap)}" decoding="async" width="${wide ? 800 : 540}" height="${wide ? 532 : 1170}"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>` : ""}
       <div class="stack">${p.stack.map(esc).join("<span aria-hidden='true'>·</span>")}</div>
     </div>
     <div class="links">${p.links.length
