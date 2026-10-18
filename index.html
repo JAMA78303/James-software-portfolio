@@ -1,722 +1,335 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>James | Software Engineer Portfolio</title>
-  <meta name="description" content="Official portfolio website for James, an aspiring software engineer building clean, practical, and user-focused digital experiences." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#6b8e23" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="James | Software Engineer Portfolio" />
-  <meta property="og:description" content="Explore James's software engineering portfolio, skills, and projects." />
-  <meta property="og:image" content="https://images.unsplash.com/photo-1558980123-68cbc932a371?auto=format&fit=crop&w=1200&q=80" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="James | Software Engineer Portfolio" />
-  <meta name="twitter:description" content="Explore James's software engineering portfolio, skills, and projects." />
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1558980123-68cbc932a371?auto=format&fit=crop&w=1200&q=80" />
-  <style>
-    /* Light mode color variables (default theme). */
-    :root {
-      --bg: #f3f5ee;
-      --surface: #ffffff;
-      --text: #1f2a1f;
-      --muted: #5d6757;
-      --accent: #6b8e23;
-      --accent-hover: #5a7a1d;
-      --border: #d9dfcf;
-      --shadow: 0 10px 30px rgba(53, 66, 43, 0.12);
-      --hero-image: url("https://images.unsplash.com/photo-1558980123-68cbc932a371?auto=format&fit=crop&w=2000&q=80");
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="James, software engineer. Web apps and iPhone apps built with Next.js, Supabase, Stripe and SwiftUI.">
+<title>Built by James</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a working index — short intro, filter chips, then one row per project (meta | body | links). */
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --ink: #17201b;
+  --muted: #5c6a62;
+  --line: #d8dfd9;
+  --accent: #0c6b46;
+  --accent-soft: #dcefe5;
+  --live: #0c6b46;
+  --build: #9a5b06;
+  --build-soft: #f6ead6;
+  --proto: #4a5aa8;
+  --proto-soft: #e3e7f7;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1412; --surface: #161d19; --ink: #e6ece8; --muted: #94a39a; --line: #29332d;
+    --accent: #4fcf93; --accent-soft: #173a2a; --live: #4fcf93;
+    --build: #e8a948; --build-soft: #3a2b13; --proto: #9aa8f0; --proto-soft: #232a4a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1412; --surface: #161d19; --ink: #e6ece8; --muted: #94a39a; --line: #29332d;
+  --accent: #4fcf93; --accent-soft: #173a2a; --live: #4fcf93;
+  --build: #e8a948; --build-soft: #3a2b13; --proto: #9aa8f0; --proto-soft: #232a4a;
+  color-scheme: dark;
+}
 
-    /* Dark mode overrides: these replace the light values when .dark-mode is on <body>. */
-    body.dark-mode {
-      --bg: #101510;
-      --surface: #1a221a;
-      --text: #eef3e9;
-      --muted: #b9c4b0;
-      --accent: #8fb34c;
-      --accent-hover: #a0c95a;
-      --border: #2b382b;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      --hero-image: url("https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?auto=format&fit=crop&w=2000&q=80");
-    }
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 16px/1.6 var(--body);
+  padding: 0 20px;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 56px 72px; display: grid; gap: 56px; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+/* Intro */
+header { display: grid; gap: 20px; }
+.kicker { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  font: 800 clamp(44px, 9vw, 92px)/.92 var(--display);
+  letter-spacing: -0.035em; margin: 0; text-wrap: balance;
+}
+h1 span { color: var(--accent); }
+.lede { font-size: 19px; max-width: 60ch; margin: 0; color: var(--ink); }
+.lede + .lede { color: var(--muted); font-size: 16px; }
+.contact { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; font-size: 15px; }
+.contact a { text-decoration-color: var(--line); text-underline-offset: 4px; }
+.contact a:hover { text-decoration-color: var(--accent); }
+.email { display: inline-flex; gap: 8px; align-items: center; font-family: var(--mono); font-size: 14px; }
+.copy {
+  font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+  padding: 4px 9px; border-radius: 6px; cursor: pointer;
+}
+.copy:hover { color: var(--ink); border-color: var(--muted); }
+.tally { font: 400 13px/1.5 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+/* Filters */
+.work { display: grid; gap: 22px; }
+.work-head { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: end; justify-content: space-between; }
+h2 { font: 700 28px/1.1 var(--display); margin: 0; letter-spacing: -0.02em; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filters button {
+  font: 500 14px var(--body); color: var(--muted); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer;
+}
+.filters button:hover { color: var(--ink); border-color: var(--muted); }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.filters .n { font-family: var(--mono); font-size: 12px; opacity: .7; margin-left: 4px; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      transition: background-color 0.8s ease, color 0.8s ease;
-    }
+/* Project rows */
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.row {
+  display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 8px 32px;
+  padding-block: 26px; border-bottom: 1px solid var(--line);
+}
+.meta { display: grid; gap: 8px; align-content: start; }
+.kind { font: 400 12px/1.3 var(--mono); color: var(--muted); letter-spacing: .02em; }
+.status {
+  justify-self: start; font: 500 11px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em;
+  padding: 5px 8px; border-radius: 4px;
+}
+.status.live { color: var(--live); background: var(--accent-soft); }
+.status.build { color: var(--build); background: var(--build-soft); }
+.status.proto { color: var(--proto); background: var(--proto-soft); }
+.body { display: grid; gap: 8px; min-width: 0; }
+h3 { font: 700 24px/1.15 var(--display); margin: 0; letter-spacing: -0.015em; }
+h3 small { font: 500 15px var(--body); color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+.body p { margin: 0; max-width: 62ch; }
+.body ul { margin: 2px 0 0; padding-left: 18px; color: var(--muted); font-size: 15px; display: grid; gap: 3px; max-width: 62ch; }
+.stack { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 6px; font: 400 12.5px var(--mono); color: var(--muted); }
+.links { display: grid; gap: 6px; align-content: start; justify-items: end; font-size: 14px; white-space: nowrap; }
+.links a { font-weight: 600; text-decoration: none; color: var(--accent); }
+.links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.links .private { color: var(--muted); font: 400 12px var(--mono); }
 
-    .container {
-      width: min(1100px, 92%);
-      margin: 0 auto;
-    }
+/* Featured rows get a little more room */
+.row.featured h3 { font-size: clamp(28px, 4vw, 36px); }
 
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: color-mix(in srgb, var(--surface) 85%, transparent);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-      transition: background-color 0.8s ease, border-color 0.8s ease;
-    }
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.about { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px 32px; }
+.about-body { display: grid; gap: 14px; max-width: 62ch; }
+.about-body p { margin: 0; }
+@media (max-width: 720px) { .about { grid-template-columns: minmax(0, 1fr); } }
 
-    .nav-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 70px;
-    }
+footer { font: 400 13px var(--mono); color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 20px; }
 
-    .brand {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--text);
-      text-decoration: none;
-      letter-spacing: 0.2px;
-    }
+@media (max-width: 720px) {
+  .wrap { padding-block: 36px 56px; gap: 44px; }
+  .row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .meta { grid-auto-flow: column; justify-content: start; align-items: center; gap: 12px; }
+  .links { justify-items: start; grid-auto-flow: column; justify-content: start; gap: 18px; }
+  .lede { font-size: 17px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .row { transition: opacity .2s; }
+}
+</style>
 
-    .nav-links {
-      display: flex;
-      gap: 1.25rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-weight: 500;
-      transition: color 0.8s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-
-    /* Circular button in navbar to switch between light and dark mode. */
-    .theme-toggle {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s ease, background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease;
-      box-shadow: var(--shadow);
-    }
-
-    .theme-toggle:hover {
-      transform: translateY(-1px);
-      background: color-mix(in srgb, var(--accent) 14%, var(--surface));
-    }
-
-    section {
-      padding: 5.5rem 0;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding-top: 7rem;
-      text-align: center;
-      color: #f8faf6;
-      isolation: isolate;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(22, 36, 24, 0.45), rgba(22, 36, 24, 0.5)),
-        var(--hero-image);
-      background-size: cover, 120% 120%;
-      background-position: center, 50% 50%;
-      background-repeat: no-repeat, no-repeat;
-      animation: beachDrift 18s ease-in-out infinite alternate;
-      z-index: -2;
-      transition: background-image 0.8s ease;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(26, 40, 26, 0.25),
-        rgba(26, 40, 26, 0.45)
-      );
-      z-index: -1;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      line-height: 1.15;
-      margin-bottom: 1rem;
-      color: #ffffff;
-    }
-
-    .hero p {
-      max-width: 700px;
-      margin: 0 auto 1.75rem;
-      color: #edf2e8;
-      font-size: 1.05rem;
-    }
-
-    .hero .btn {
-      display: inline-block;
-      padding: 0.75rem 1.2rem;
-      border-radius: 10px;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-
-    .hero .btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-    }
-
-    @keyframes beachDrift {
-      from {
-        background-position: center, 42% 46%;
-      }
-      to {
-        background-position: center, 58% 54%;
-      }
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .section-subtitle {
-      color: var(--muted);
-      margin-bottom: 2rem;
-      max-width: 700px;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.25rem;
-      box-shadow: var(--shadow);
-      transition: background-color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
-    }
-
-    .card h3 {
-      margin-bottom: 0.6rem;
-      font-size: 1.15rem;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 0.97rem;
-      margin-bottom: 0.9rem;
-    }
-
-    .tags-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.22rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      background: #e6edd9;
-      color: #3f5821;
-      border: 1px solid #c8d7ad;
-      transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease;
-    }
-
-    .about-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      max-width: 780px;
-      transition: background-color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
-    }
-
-    .about-box p {
-      color: var(--muted);
-      margin-bottom: 0.9rem;
-    }
-
-    .about-box p:last-child {
-      margin-bottom: 0;
-    }
-
-    .learning-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      max-width: 780px;
-      transition: background-color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
-    }
-
-    .learning-box p {
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .contact-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      max-width: 700px;
-      transition: background-color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
-    }
-
-    .contact-box a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .contact-box a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      padding: 2rem 0 2.5rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-      will-change: opacity, transform;
-    }
-
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reveal-delay-1 {
-      transition-delay: 0.08s;
-    }
-
-    .reveal-delay-2 {
-      transition-delay: 0.16s;
-    }
-
-    .reveal-delay-3 {
-      transition-delay: 0.24s;
-    }
-
-    .ai-helper {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 1200;
-    }
-
-    .ai-toggle {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--accent);
-      color: #ffffff;
-      font-size: 1.25rem;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s ease, background-color 0.3s ease;
-    }
-
-    .ai-toggle:hover {
-      transform: translateY(-2px);
-      background: var(--accent-hover);
-    }
-
-    .ai-panel {
-      position: absolute;
-      right: 0;
-      bottom: 64px;
-      width: min(360px, 88vw);
-      height: 460px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .ai-panel.hidden {
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-    }
-
-    .ai-header {
-      padding: 0.75rem 0.9rem;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-      color: var(--text);
-      background: color-mix(in srgb, var(--surface) 88%, var(--accent) 12%);
-    }
-
-    .ai-messages {
-      flex: 1;
-      padding: 0.85rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .msg {
-      padding: 0.55rem 0.7rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      max-width: 90%;
-      line-height: 1.45;
-    }
-
-    .msg.bot {
-      background: color-mix(in srgb, var(--accent) 16%, var(--surface));
-      border: 1px solid var(--border);
-      color: var(--text);
-      align-self: flex-start;
-    }
-
-    .msg.user {
-      background: var(--accent);
-      color: #ffffff;
-      align-self: flex-end;
-    }
-
-    .quick-replies {
-      border-top: 1px solid var(--border);
-      padding: 0.7rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .quick-reply-btn {
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--accent) 12%, var(--surface));
-      color: var(--text);
-      border-radius: 999px;
-      padding: 0.45rem 0.7rem;
-      cursor: pointer;
-      font-size: 0.82rem;
-      line-height: 1.2;
-      transition: background-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .quick-reply-btn:hover {
-      background: color-mix(in srgb, var(--accent) 24%, var(--surface));
-      transform: translateY(-1px);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .reveal,
-      .reveal.is-visible {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .projects-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .nav-content {
-        flex-direction: column;
-        justify-content: center;
-        padding: 0.9rem 0;
-        gap: 0.4rem;
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-
-      section {
-        padding: 4.5rem 0;
-      }
-
-      .hero {
-        padding-top: 5.5rem;
-      }
-    }
-  </style>
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container nav-content">
-      <a href="#home" class="brand">James</a>
-      <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#learning">Learning</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <div class="kicker">Software engineer · Web &amp; iOS</div>
+      <button class="copy" id="themeBtn" type="button" aria-label="Switch colour theme">Dark mode</button>
     </div>
-  </nav>
+    <h1>James<span>.</span><br>Things I've built.</h1>
+    <p class="lede">I build web apps and iPhone apps end to end: product, design, database and payments. A lot of what I make serves Muslim users, and most of it is built with Next.js, Supabase, Stripe and SwiftUI.</p>
+    <p class="lede">Below is everything I've worked on, from live products to prototypes. If you'd like to work together on a site, product or landing page, get in touch.</p>
+    <div class="contact">
+      <span class="email"><span id="addr">omarmach1996@gmail.com</span><button class="copy" id="copyBtn" type="button">Copy</button></span>
+      <a href="https://github.com/JAMA78303">GitHub ↗</a>
+    </div>
+    <div class="tally" id="tally"></div>
+  </header>
 
-  <main>
-    <section id="home" class="hero">
-      <div class="container">
-        <h1>Hello, I'm James</h1>
-        <p>
-          I am an aspiring software engineer focused on building thoughtful digital experiences.
-          I enjoy solving real-world problems with clean design and practical code.
-        </p>
-        <a href="#projects" class="btn">View My Work</a>
-      </div>
-    </section>
+  <section class="work" aria-labelledby="work-h">
+    <div class="work-head">
+      <h2 id="work-h">Projects</h2>
+      <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
+    </div>
+    <ul class="list" id="list"></ul>
+  </section>
 
-    <section id="about" class="reveal">
-      <div class="container">
-        <h2 class="section-title">About Me</h2>
-        <div class="about-box reveal reveal-delay-1">
-          <p>
-            I am James, an aspiring software engineer with a strong interest in building useful digital products.
-            I enjoy turning ideas into practical experiences that are clean, accessible, and easy to use.
-          </p>
-          <p>
-            My focus is on growing my full-stack development skills, contributing to meaningful projects,
-            and continuously learning modern technologies and best practices.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="learning" class="reveal">
-      <div class="container">
-        <h2 class="section-title">Currently Learning</h2>
-        <div class="learning-box reveal reveal-delay-1">
-          <p>I am currently building my skills in these technologies:</p>
-          <div class="tags-row">
-            <span class="tag">HTML</span>
-            <span class="tag">CSS</span>
-            <span class="tag">Python</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects" class="reveal">
-      <div class="container">
-        <h2 class="section-title">Projects</h2>
-        <p class="section-subtitle">
-          Here are selected projects, including this portfolio website.
-        </p>
-        <div class="projects-grid">
-          <article class="card reveal reveal-delay-1">
-            <h3>Portfolio Website</h3>
-            <p>
-              A personal portfolio built with HTML, CSS, and JavaScript, featuring dark mode,
-              smooth section reveals, and an interactive helper widget.
-            </p>
-            <div class="tags-row">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">JavaScript</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="reveal">
-      <div class="container">
-        <h2 class="section-title">Contact</h2>
-        <div class="contact-box reveal reveal-delay-1">
-          <p>
-            Interested in collaborating or have a question? Reach out at
-            <a href="mailto:omarmach1996@gmail.com">omarmach1996@gmail.com</a>.
-          </p>
-        </div>
-      </div>
-    </section>
-  </main>
+  <section class="about" aria-labelledby="about-h">
+    <h2 id="about-h">About</h2>
+    <div class="about-body">
+      <p>I'm James, a software engineer who likes taking an idea all the way to something people can use. I enjoy the whole job: working out what to build, designing it, writing the code, and getting it live.</p>
+      <p>Most days I work in Next.js, TypeScript, Supabase and Stripe on the web, and SwiftUI on iPhone. I care about clear design, solid engineering and products that help real people, especially Muslim users who are often an afterthought.</p>
+    </div>
+  </section>
 
   <footer>
-    <div class="container">
-      <p>&copy; 2026 James. All rights reserved.</p>
-    </div>
+    <span>James · 2026</span>
+    <span>Updated 18 Oct 2026</span>
   </footer>
-  <div class="ai-helper">
-    <div class="ai-panel hidden" id="aiPanel">
-      <div class="ai-header">AI Helper</div>
-      <div class="ai-messages" id="aiMessages">
-        <div class="msg bot">Hi! Ask me about James, projects, skills, or contact details.</div>
-      </div>
-      <div class="quick-replies" id="quickReplies">
-        <button class="quick-reply-btn" type="button">Who is James?</button>
-        <button class="quick-reply-btn" type="button">What can he build?</button>
-        <button class="quick-reply-btn" type="button">Can James help me make a website?</button>
-        <button class="quick-reply-btn" type="button">How do I contact him?</button>
-      </div>
+</div>
+
+<script>
+const projects = [
+  {
+    name: "BiteSync", tag: "Meal planning", kind: "web", kindLabel: "Web app", status: "live", featured: true,
+    desc: "A meal planner that builds recipes, plans your week and writes the grocery list for you.",
+    points: [
+      "Macro-aware planning against a personal TDEE target, with meal templates for each goal",
+      "Weekly reminders and one-tap “plan next week” to bring people back",
+      "Stripe subscriptions, a blog with comparison posts, and 110+ merged pull requests"
+    ],
+    stack: ["Next.js", "React", "Supabase", "Stripe", "Vercel"],
+    links: [["bitesync.io", "https://bitesync.io"], ["GitHub", "https://github.com/JAMA78303/bitesync"]]
+  },
+  {
+    name: "Dua & Ayah Companion", tag: "Qur'an and duas", kind: "web", kindLabel: "Web app · PWA", status: "build", featured: true,
+    desc: "Tell it how you feel and it finds a Qur'anic ayah or dua to reflect on.",
+    points: [
+      "Qur'an reader, prayer times, morning and evening adhkar and Sunnah duas",
+      "Library and personal “You” pages, with saved reflections and a premium tier",
+      "Installable as a PWA, with content reviewed before it goes live"
+    ],
+    stack: ["Next.js", "Supabase", "pgvector", "Tailwind", "Vitest"],
+    links: [["GitHub", "https://github.com/JAMA78303/dua-ayah-companion"]]
+  },
+  {
+    name: "Nafas", tag: "نَفَس · Quit vaping", kind: "ios", kindLabel: "iPhone app", status: "build",
+    desc: "An Arabic-first iPhone app that helps adults quit vapes, cigarettes and shisha. Aiming for the App Store before Ramadan 2027.",
+    points: [
+      "Live time-free counter, money saved and next milestone on the home screen",
+      "Craving flow, slip tracking, reminders and a Ramadan mode",
+      "Home and Lock Screen widgets; fair monthly or yearly premium with StoreKit 2",
+      "All data stays on the phone. No accounts, no tracking SDKs"
+    ],
+    stack: ["SwiftUI", "StoreKit 2", "WidgetKit", "XcodeGen"],
+    links: []
+  },
+  {
+    name: "Practise to Unlock", tag: "Music practice", kind: "ios", kindLabel: "iPhone & iPad app", status: "proto",
+    desc: "Keeps your chosen apps locked until the microphone hears real instrument practice.",
+    points: [
+      "Uses Apple's Screen Time APIs to block apps, and unlocks them after a practice session",
+      "On-device pitch detection that checks for middle C and rejects sounds that aren't piano",
+      "Designed in Figma first, screen by screen (UX-01 to UX-16)"
+    ],
+    stack: ["SwiftUI", "Family Controls", "AVAudioEngine"],
+    links: []
+  },
+  {
+    name: "CancelKit", tag: "Subscription compliance", kind: "web", kindLabel: "Developer tool", status: "build",
+    desc: "A compliance layer that sits beside Stripe Billing and handles the UK's new subscription rules under the DMCC Act 2024.",
+    points: [
+      "Rules engine in plain TypeScript: contract facts in, every legal duty and its deadline out",
+      "Cooling-off refund calculator and a tamper-evident, hash-chained evidence log",
+      "Postgres scheduler with a dead-man's switch, tested with pgTAP"
+    ],
+    stack: ["TypeScript", "Postgres", "Supabase", "pg_cron", "Stripe"],
+    links: [["GitHub", "https://github.com/JAMA78303/cancelkit"]]
+  },
+  {
+    name: "AgentZero", tag: "AI for estate agents", kind: "client", kindLabel: "Team project", status: "build",
+    desc: "An AI copilot for Dubai real estate agents that they talk to over WhatsApp.",
+    points: [
+      "Assistant runs on Meta's Muse with Claude as the fallback",
+      "Outbound AI voice calls, including calling website callback requests within 60 seconds",
+      "Web console for uploading listings and configuring the agent"
+    ],
+    stack: ["Next.js", "Supabase", "Twilio", "WhatsApp Cloud API", "Vapi"],
+    links: [["GitHub", "https://github.com/ShuibCodes/dubai-price-drops-2026-iran-war-v1"]]
+  },
+  {
+    name: "EGM Trading", tag: "Car dealer", kind: "client", kindLabel: "Client website", status: "live",
+    desc: "A mobile-first landing page for a used car dealer, built to turn visits into callback requests.",
+    points: [
+      "Current stock with prices, a sell-your-car section and click-to-call buttons",
+      "Built from a full design handoff, with brand logo, favicons and social share images"
+    ],
+    stack: ["Next.js", "Tailwind v4"],
+    links: [["GitHub", "https://github.com/ShuibCodes/EGM-Trading---landing-page"]]
+  },
+  {
+    name: "Nothing To See Here", tag: "Just for fun", kind: "fun", kindLabel: "Experiment", status: "proto",
+    desc: "A suspicious man called Gerald stands under a streetlamp. Most of the time, nothing happens.",
+    points: [
+      "A shared counter of every visit; rare moments roll at 1 in 500 and 1 in 5,000",
+      "Every 50,000th visit gets a legendary moment. Sometimes he sends you a link"
+    ],
+    stack: ["Next.js", "Redis", "Vercel"],
+    links: [["GitHub", "https://github.com/JAMA78303/nothing-to-see-here"]]
+  }
+];
+
+const statusText = { live: "Live", build: "In progress", proto: "Prototype" };
+const filterDefs = [["all", "All"], ["web", "Web"], ["ios", "iOS"], ["client", "Client & team"], ["fun", "Experiments"]];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const live = projects.filter(p => p.status === "live").length;
+document.getElementById("tally").textContent =
+  `${projects.length} projects · ${live} live · ${projects.filter(p => p.kind === "ios").length} iPhone apps`;
+
+const list = document.getElementById("list");
+list.innerHTML = projects.map(p => `
+  <li class="row${p.featured ? " featured" : ""}" data-kind="${p.kind}">
+    <div class="meta">
+      <span class="status ${p.status}">${statusText[p.status]}</span>
+      <span class="kind">${esc(p.kindLabel)}</span>
     </div>
-    <button class="ai-toggle" id="aiToggle" aria-label="Open AI helper" aria-expanded="false" title="Open AI helper">🤖</button>
-  </div>
-  <script>
-    // Grab the dark/light mode button from the page.
-    const themeToggle = document.getElementById("themeToggle");
-    const aiToggle = document.getElementById("aiToggle");
-    const aiPanel = document.getElementById("aiPanel");
-    const quickReplies = document.getElementById("quickReplies");
-    const aiMessages = document.getElementById("aiMessages");
-    // Read the user's last selected theme from browser storage.
-    const savedTheme = localStorage.getItem("theme");
-    const shouldUseDark = savedTheme === "dark";
-    const revealItems = document.querySelectorAll(".reveal");
+    <div class="body">
+      <h3>${esc(p.name)}<small>${esc(p.tag)}</small></h3>
+      <p>${esc(p.desc)}</p>
+      <ul>${p.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <div class="stack">${p.stack.map(esc).join("<span aria-hidden='true'>·</span>")}</div>
+    </div>
+    <div class="links">${p.links.length
+      ? p.links.map(([t, u]) => `<a href="${u}">${esc(t)} ↗</a>`).join("")
+      : `<span class="private">Code private</span>`}</div>
+  </li>`).join("");
 
-    // Apply theme on page load and set icon:
-    // sun means "currently dark, click to go light"
-    // moon means "currently light, click to go dark".
-    document.body.classList.toggle("dark-mode", shouldUseDark);
-    themeToggle.textContent = shouldUseDark ? "☀️" : "🌙";
+const filters = document.getElementById("filters");
+filters.innerHTML = filterDefs.map(([k, label]) => {
+  const n = k === "all" ? projects.length : projects.filter(p => p.kind === k).length;
+  return `<button type="button" id="f-${k}" data-k="${k}" aria-pressed="${k === "all"}">${label}<span class="n">${n}</span></button>`;
+}).join("");
 
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-          } else {
-            entry.target.classList.remove("is-visible");
-          }
-        });
-      },
-      { threshold: 0.14 }
-    );
+function apply(k) {
+  filters.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.k === k));
+  list.querySelectorAll(".row").forEach(r => { r.hidden = k !== "all" && r.dataset.kind !== k; });
+  try { localStorage.setItem("pf-filter", k); } catch (e) {}
+}
+filters.addEventListener("click", e => { const b = e.target.closest("button"); if (b) apply(b.dataset.k); });
+try { const saved = localStorage.getItem("pf-filter"); if (saved && filterDefs.some(f => f[0] === saved)) apply(saved); } catch (e) {}
 
-    revealItems.forEach((item) => revealObserver.observe(item));
+const themeBtn = document.getElementById("themeBtn");
+const isDark = () => {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+};
+const syncTheme = () => { themeBtn.textContent = isDark() ? "Light mode" : "Dark mode"; };
+try { const t = localStorage.getItem("pf-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+syncTheme();
+themeBtn.addEventListener("click", () => {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("pf-theme", next); } catch (e) {}
+  syncTheme();
+});
 
-    // When user clicks button, switch mode and save preference.
-    themeToggle.addEventListener("click", () => {
-      const isDark = document.body.classList.toggle("dark-mode");
-      themeToggle.textContent = isDark ? "☀️" : "🌙";
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    });
+document.getElementById("copyBtn").addEventListener("click", e => {
+  const btn = e.currentTarget, text = document.getElementById("addr").textContent;
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => btn.textContent = "Copy", 1600); };
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(document.getElementById("addr")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = "Selected"; };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+});
+</script>
 
-    aiToggle.addEventListener("click", () => {
-      const isHidden = aiPanel.classList.toggle("hidden");
-      aiToggle.setAttribute("aria-expanded", String(!isHidden));
-    });
-
-    const helperReplyFallback = (question) => {
-      const text = question.toLowerCase();
-      const mentionsWebsiteHelp =
-        (text.includes("help") || text.includes("build") || text.includes("make") || text.includes("create")) &&
-        (text.includes("website") || text.includes("webiste") || text.includes("site") || text.includes("portfolio"));
-
-      if (mentionsWebsiteHelp) {
-        return "Yes, James can help you build a website. Share what you need (portfolio, business site, or landing page) and your timeline, and he can discuss next steps.";
-      }
-      if (text.includes("hire") || text.includes("work with") || text.includes("collaborate") || text.includes("available")) {
-        return "Yes, James is open to collaboration. You can reach out at omarmach1996@gmail.com with your project idea, timeline, and goals.";
-      }
-      if (text.includes("price") || text.includes("cost") || text.includes("budget") || text.includes("rate")) {
-        return "Pricing depends on project scope and timeline. Send a short brief to omarmach1996@gmail.com and James can provide an estimate.";
-      }
-      if (text.includes("time") || text.includes("deadline") || text.includes("how long")) {
-        return "Delivery time depends on complexity, but smaller websites can usually be planned and built quickly. Share your deadline and requirements to get a realistic timeline.";
-      }
-      if (text.includes("contact") || text.includes("email")) {
-        return "You can contact James at omarmach1996@gmail.com.";
-      }
-      if (text.includes("project")) {
-        return "Current highlighted project: this portfolio website built with HTML, CSS, and JavaScript.";
-      }
-      if (text.includes("learn") || text.includes("learning") || text.includes("skill")) {
-        return "James is currently learning HTML, CSS, and Python.";
-      }
-      if (text.includes("about") || text.includes("who")) {
-        return "James is an aspiring software engineer focused on practical, clean, and useful digital products.";
-      }
-      return "I can help with sections like About, Projects, Learning, and Contact. Try asking about one of those.";
-    };
-
-    const getAIReply = async (question) => {
-      // GitHub Pages has no backend runtime, so we always use local replies.
-      return helperReplyFallback(question);
-    };
-
-    const addMessage = (message, role) => {
-      const messageEl = document.createElement("div");
-      messageEl.className = `msg ${role}`;
-      messageEl.textContent = message;
-      aiMessages.appendChild(messageEl);
-      aiMessages.scrollTop = aiMessages.scrollHeight;
-    };
-
-    const askQuestion = async (question) => {
-      if (!question) return;
-      addMessage(question, "user");
-      addMessage("Thinking...", "bot");
-      const pendingMessage = aiMessages.lastElementChild;
-
-      const reply = await getAIReply(question);
-      pendingMessage.textContent = reply;
-    };
-
-    quickReplies.addEventListener("click", (event) => {
-      const button = event.target.closest(".quick-reply-btn");
-      if (!button) return;
-      askQuestion(button.textContent.trim());
-    });
-  </script>
 </body>
 </html>
