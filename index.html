@@ -112,6 +112,12 @@ h3 small { font: 500 15px var(--body); color: var(--muted); letter-spacing: 0; m
 .links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .links .private { color: var(--muted); font: 400 12px var(--mono); }
 
+.shots { display: flex; gap: 14px; margin-top: 10px; overflow-x: auto; padding-bottom: 4px; }
+.shots figure { margin: 0; flex: 0 0 auto; width: 150px; display: grid; gap: 6px; }
+.shots img { width: 100%; height: auto; display: block; border-radius: 18px; border: 1px solid var(--line); background: var(--surface); }
+.shots figcaption { font: 400 12px/1.4 var(--body); color: var(--muted); }
+@media (max-width: 720px) { .shots figure { width: 128px; } }
+
 /* Featured rows get a little more room */
 .row.featured h3 { font-size: clamp(28px, 4vw, 36px); }
 
@@ -222,6 +228,11 @@ const projects = [
       "All data stays on the phone. No accounts, no tracking SDKs"
     ],
     stack: ["SwiftUI", "StoreKit 2", "WidgetKit", "XcodeGen"],
+    shots: [
+      ["img/nafas-home.jpg", "Home screen, in English"],
+      ["img/nafas-ramadan.jpg", "Ramadan mode, in Arabic"],
+      ["img/nafas-breathe.jpg", "Breathing exercise for a craving"]
+    ],
     links: []
   },
   {
@@ -233,6 +244,10 @@ const projects = [
       "Designed in Figma first, screen by screen (UX-01 to UX-16)"
     ],
     stack: ["SwiftUI", "Family Controls", "AVAudioEngine"],
+    shots: [
+      ["img/practise-locked.jpg", "An app stays locked until you practise"],
+      ["img/practise-timer.jpg", "The timer only runs while it hears piano"]
+    ],
     links: []
   },
   {
@@ -278,6 +293,7 @@ list.innerHTML = projects.map(p => `
       <h3>${esc(p.name)}<small>${esc(p.tag)}</small></h3>
       <p>${esc(p.desc)}</p>
       <ul>${p.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      ${p.shots ? `<div class="shots">${p.shots.map(([src, cap]) => `<figure><img src="${src}" alt="${esc(p.name)}: ${esc(cap)}" loading="lazy" width="540" height="1170"><figcaption>${esc(cap)}</figcaption></figure>`).join("")}</div>` : ""}
       <div class="stack">${p.stack.map(esc).join("<span aria-hidden='true'>·</span>")}</div>
     </div>
     <div class="links">${p.links.length
