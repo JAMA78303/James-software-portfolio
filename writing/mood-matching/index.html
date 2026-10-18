@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matching Feelings to Ayat</title>
+<meta name="description" content="Technical write-up by James Machmouchi: how the Dua & Ayah Companion turns free text like “I'm not sad, just anxious” into the right feeling, with negation, weighted phrases and tests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column (~68ch) with a live demo panel and code blocks that scroll on their own. */
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --code-bg: #eef2ee;
+  --ink: #17201b;
+  --muted: #5c6a62;
+  --line: #d8dfd9;
+  --accent: #0c6b46;
+  --accent-soft: #dcefe5;
+  --strike: #9a5b06;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1412; --surface: #161d19; --code-bg: #1b2420; --ink: #e6ece8; --muted: #94a39a; --line: #29332d;
+    --accent: #4fcf93; --accent-soft: #173a2a; --strike: #e8a948; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1412; --surface: #161d19; --code-bg: #1b2420; --ink: #e6ece8; --muted: #94a39a; --line: #29332d;
+  --accent: #4fcf93; --accent-soft: #173a2a; --strike: #e8a948; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.65 var(--body); padding: 0 20px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 28px 80px; display: grid; gap: 22px; }
+nav { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; }
+nav a { font-weight: 600; text-decoration: none; }
+.kicker { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 24px 0 0; }
+h1 { font: 800 clamp(34px, 6vw, 52px)/1.02 var(--display); letter-spacing: -0.03em; margin: 0; text-wrap: balance; }
+.meta { font: 400 13px var(--mono); color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 16px; }
+h2 { font: 700 26px/1.2 var(--display); letter-spacing: -0.015em; margin: 26px 0 0; text-wrap: balance; }
+p, ul, ol { margin: 0; }
+ul, ol { padding-left: 22px; display: grid; gap: 6px; }
+.lede { font-size: 20px; line-height: 1.55; }
+code { font: 400 0.86em var(--mono); background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font: 400 13.5px/1.6 var(--mono); }
+pre code { background: none; padding: 0; font-size: inherit; }
+.cmt { color: var(--muted); }
+.kw { color: var(--accent); font-weight: 500; }
+
+/* Live demo */
+.demo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 14px; }
+.demo label { font: 600 14px var(--body); }
+.demo input { width: 100%; font: 400 17px var(--body); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips button { font: 400 13px var(--body); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+.chips button:hover { color: var(--ink); border-color: var(--muted); }
+.result { display: grid; gap: 10px; }
+.verdict { font: 700 22px var(--display); }
+.verdict span { color: var(--accent); }
+.tokens { display: flex; flex-wrap: wrap; gap: 6px; font: 400 13px var(--mono); }
+.tok { padding: 3px 7px; border-radius: 5px; background: var(--bg); border: 1px solid var(--line); }
+.tok.hit { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 500; }
+.tok.neg { text-decoration: line-through; color: var(--strike); border-color: var(--strike); }
+.tok.negator { font-weight: 600; color: var(--strike); }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 96px minmax(0, 1fr) 44px; gap: 10px; align-items: center; font: 400 13px var(--mono); font-variant-numeric: tabular-nums; }
+.bar .track { height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+.bar .fill { height: 100%; background: var(--accent); border-radius: 5px; }
+.bar.lose .fill { background: var(--muted); opacity: .5; }
+.bar .n { text-align: right; }
+.note { font-size: 13px; color: var(--muted); }
+
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.tablewrap { overflow-x: auto; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+td code { white-space: nowrap; }
+footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; display: grid; gap: 6px; }
+@media (max-width: 560px) { body { font-size: 16px; } .bar { grid-template-columns: 80px minmax(0, 1fr) 40px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="../../">← James Machmouchi · Portfolio</a>
+    <a href="https://github.com/JAMA78303/dua-ayah-companion/blob/main/lib/matching/intentMatcher.ts">Source on GitHub ↗</a>
+  </nav>
+
+  <p class="kicker">Technical write-up · Dua &amp; Ayah Companion</p>
+  <h1>Matching how someone feels to the right ayah</h1>
+  <div class="meta"><span>James Machmouchi</span><span>October 2026</span><span>TypeScript · Vitest · Supabase</span></div>
+
+  <p class="lede">In the Dua &amp; Ayah Companion, people type how they feel in their own words, and the app opens an ayah or dua for that feeling. This is how I rebuilt the matcher so that “I'm not sad, just really anxious about my exams” lands on <em>anxiety</em> instead of <em>sadness</em>.</p>
+
+  <section class="demo" aria-labelledby="demo-h">
+    <label id="demo-h" for="feel">Try it: this runs the same scoring code in your browser</label>
+    <input id="feel" type="text" value="I'm not sad, just really anxious about my exams" autocomplete="off" spellcheck="false">
+    <div class="chips" id="chips"></div>
+    <div class="result" aria-live="polite">
+      <div class="verdict" id="verdict"></div>
+      <div class="tokens" id="tokens"></div>
+      <div class="bars" id="bars"></div>
+    </div>
+    <p class="note">Uses the app's built-in keywords plus the five database keywords from the test file. The live app also loads the full keyword table from Supabase.</p>
+  </section>
+
+  <h2>The problem</h2>
+  <p>The app has eleven feelings, such as anxiety, grief, guidance and anger, and each one has its own collection of ayat and duas. The search box has one job: read a sentence and pick the right feeling. I set a few constraints:</p>
+  <ul>
+    <li><strong>Private.</strong> People write very personal things here. The text should never leave their phone.</li>
+    <li><strong>Instant and free.</strong> No round trip to an AI model, and no per-search cost.</li>
+    <li><strong>Explainable.</strong> When it picks the wrong feeling, I need to see exactly why and fix it with a test.</li>
+    <li><strong>Editable without a deploy.</strong> Content reviewers can add keywords in a Supabase table.</li>
+  </ul>
+
+  <h2>What was wrong with the first version</h2>
+  <p>The first matcher checked a list of regex “overrides” first, then picked the single heaviest keyword it found. Real sentences broke it in three ways:</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Input</th><th>Got</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>“I'm not sad, just anxious”</td><td>sadness</td><td>The <code>/\bsad\b/</code> override fired first. It had no idea about “not”.</td></tr>
+        <tr><td>“I can't sleep”</td><td>nothing</td><td>The input became <code>i can t sleep</code>, but the database keyword was <code>i can't sleep</code>. Keywords with apostrophes could never match.</td></tr>
+        <tr><td>Any text, database down</td><td>nothing</td><td>A failed keyword fetch threw an error, so the search silently did nothing.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>How the new matcher works</h2>
+  <ol>
+    <li><strong>Normalise both sides the same way.</strong> Lower-case, drop apostrophes, turn punctuation into spaces. “I can’t sleep!” and the keyword <code>i can't sleep</code> both become <code>i cant sleep</code>. This one change fixed every database keyword with an apostrophe.</li>
+    <li><strong>Match whole words, including phrases.</strong> Slide each keyword along the tokens. “hope” matches <code>hope</code> but not <code>hopeless</code>, which has its own entry under the same feeling at a higher weight.</li>
+    <li><strong>Ignore negated keywords.</strong> If “not”, “don't”, “never” or another negator appears in the three words before a keyword, that keyword doesn't count.</li>
+    <li><strong>Add up every match per feeling.</strong> Each keyword has a weight between 0.6 and 1. Phrases weigh more than single words, so “passed away” (1.0) is a stronger signal than “loss” (0.8).</li>
+    <li><strong>Pick the highest total.</strong> If nothing scores, return <code>null</code> and the app offers “browse by feeling” instead of guessing.</li>
+  </ol>
+
+  <p>The core is one pure function, which makes it easy to test:</p>
+<pre><code><span class="kw">export function</span> scoreIntent(input: string, mappings: IntentMapping[]): EmotionCategory | null {
+  <span class="kw">const</span> tokens = normaliseForMatching(input).split(" ").filter(Boolean);
+  <span class="kw">if</span> (tokens.length === 0) <span class="kw">return</span> null;
+
+  <span class="kw">const</span> scores = <span class="kw">new</span> Map&lt;EmotionCategory, number&gt;();
+  <span class="kw">for</span> (<span class="kw">const</span> mapping <span class="kw">of</span> mappings) {
+    <span class="kw">const</span> keyword = normaliseForMatching(mapping.keyword).split(" ").filter(Boolean);
+    <span class="kw">if</span> (keyword.length === 0) <span class="kw">continue</span>;
+    <span class="kw">for</span> (<span class="kw">let</span> i = 0; i + keyword.length &lt;= tokens.length; i++) {
+      <span class="kw">if</span> (!keyword.every((word, k) =&gt; tokens[i + k] === word)) <span class="kw">continue</span>;
+      <span class="cmt">// A negator in the three words before the keyword cancels it ("I'm not sad")</span>
+      <span class="kw">const</span> negated = tokens.slice(Math.max(0, i - NEGATION_WINDOW), i).some((t) =&gt; NEGATORS.has(t));
+      <span class="kw">if</span> (!negated) scores.set(mapping.category, (scores.get(mapping.category) ?? 0) + mapping.weight);
+    }
+  }
+
+  <span class="kw">let</span> best: EmotionCategory | null = null;
+  <span class="kw">let</span> bestScore = 0;
+  <span class="kw">for</span> (<span class="kw">const</span> [category, score] <span class="kw">of</span> scores) {
+    <span class="kw">if</span> (score &gt; bestScore) { best = category; bestScore = score; }
+  }
+  <span class="kw">return</span> best;
+}</code></pre>
+
+  <p>Around it, <code>matchIntent</code> loads the keyword table from Supabase, merges it with the built-in keywords and caches it for five minutes. If the database can't be reached, it falls back to the built-in keywords, so the search still works.</p>
+
+  <h2>A worked example</h2>
+  <p>“I lost my job and I'm so stressed” contains two signals:</p>
+  <ul>
+    <li><code>lost</code> → guidance, 0.6</li>
+    <li><code>stressed</code> → anxiety, 0.9</li>
+  </ul>
+  <p>Anxiety wins, 0.9 to 0.6. Now compare “I lost someone close to me”: the database phrase <code>i lost someone</code> scores grief 1.0, beating guidance at 0.6. Same word, different feeling, and the reason is visible in the numbers. Type either sentence into the demo above to see the breakdown.</p>
+
+  <h2>Testing it</h2>
+  <p>Every failure I found became a test before I fixed it. The suite has 6 Vitest tests covering apostrophes, negation, phrases beating single words, everyday phrasing, anger, and inputs that should match nothing. They run in under 10 ms because <code>scoreIntent</code> is a pure function with no database or network:</p>
+<pre><code>it("ignores negated feelings", () =&gt; {
+  expect(match("I'm not sad, just really anxious about my exams")).toBe("anxiety");
+  expect(match("I don't feel lonely anymore, I'm grateful")).toBe("gratitude");
+  expect(match("there is no hope")).toBe("hope");
+});</code></pre>
+  <p>The last line is deliberate. “No hope” is itself a keyword for the <em>hope</em> feeling, which holds ayat for people who feel hopeless. The phrase match has nothing before it, so it isn't negated, and the person still gets the right collection.</p>
+
+  <h2>Trade-offs and what I'd do next</h2>
+  <ul>
+    <li><strong>Why not an AI model or embeddings?</strong> They would handle more phrasing, but they'd send private text to a server, add cost and delay, and make wrong answers hard to explain. For eleven feelings, weighted keywords plus tests cover common sentences well, and every result can be traced.</li>
+    <li><strong>Mixed feelings.</strong> “Grateful but exhausted” returns one feeling. Showing the top two when scores are close would be more honest.</li>
+    <li><strong>Spelling.</strong> “anxios” won't match. A small edit-distance check on single words would catch common typos.</li>
+    <li><strong>Learning from misses.</strong> Without logging what people write, the app could count how often each <em>result</em> is followed by “browse by feeling”. That would show which feelings need more keywords, without storing anyone's words.</li>
+  </ul>
+
+  <footer>
+    <span><strong>Code:</strong> <a href="https://github.com/JAMA78303/dua-ayah-companion/blob/main/lib/matching/intentMatcher.ts">intentMatcher.ts</a> · <a href="https://github.com/JAMA78303/dua-ayah-companion/blob/main/lib/matching/intentMatcher.test.ts">intentMatcher.test.ts</a> · <a href="https://github.com/JAMA78303/dua-ayah-companion/commit/782527f20ca2331c26cc386b64786f849f47cc96">the commit that rebuilt it</a></span>
+    <span><strong>More:</strong> <a href="../../">Portfolio</a> · <a href="../../cv/">CV</a></span>
+  </footer>
+</div>
+
+<script>
+// Same logic as lib/matching/intentMatcher.ts, ported to plain JavaScript for this page.
+const NEGATORS = new Set(["not", "no", "never", "dont", "doesnt", "didnt", "isnt", "arent", "wasnt", "werent", "aint", "without", "hardly"]);
+const NEGATION_WINDOW = 3;
+const group = (words, category, weight) => words.map((keyword) => ({ keyword, category, weight }));
+const MAPPINGS = [
+  // Database sample from intentMatcher.test.ts
+  { keyword: "i can't sleep", category: "anxiety", weight: 1 },
+  { keyword: "i'm scared of the future", category: "anxiety", weight: 1 },
+  { keyword: "i lost someone", category: "grief", weight: 1 },
+  { keyword: "i can't stop crying", category: "grief", weight: 1 },
+  { keyword: "no one understands me", category: "loneliness", weight: 1 },
+  // BUILTIN_MAPPINGS
+  ...group(["anxious", "anxiety", "worried", "stressed", "panic", "panicking", "overthinking"], "anxiety", 0.9),
+  ...group(["worry", "worrying", "nervous", "scared", "afraid", "stress"], "anxiety", 0.8),
+  ...group(["overwhelmed"], "anxiety", 1), ...group(["fear"], "anxiety", 0.7), ...group(["exam", "exams"], "anxiety", 0.6),
+  ...group(["sad", "depressed", "unhappy", "heartbroken", "miserable"], "sadness", 0.9),
+  ...group(["upset", "depression", "feeling low", "feel low"], "sadness", 0.8), ...group(["crying"], "sadness", 0.7),
+  ...group(["grateful", "thankful", "alhamdulillah", "thank allah"], "gratitude", 0.9),
+  ...group(["blessed"], "gratitude", 0.8), ...group(["happy"], "gratitude", 0.7),
+  ...group(["dont know what to do"], "guidance", 1), ...group(["confused", "istikhara"], "guidance", 0.9),
+  ...group(["guidance", "unsure", "decision", "which way"], "guidance", 0.8), ...group(["decide", "direction"], "guidance", 0.7),
+  ...group(["lost"], "guidance", 0.6),
+  ...group(["going through a lot"], "patience", 0.9),
+  ...group(["patient", "patience", "exhausted", "struggling", "hardship", "hard time"], "patience", 0.8),
+  ...group(["waiting", "so tired"], "patience", 0.7), ...group(["difficult"], "patience", 0.6),
+  ...group(["guilty", "guilt", "regret"], "guilt", 0.9), ...group(["ashamed"], "guilt", 0.8), ...group(["feel bad"], "guilt", 0.7),
+  ...group(["passed away"], "grief", 1), ...group(["grief", "grieving", "died", "funeral", "bereaved"], "grief", 0.9),
+  ...group(["death", "loss", "miss her", "miss him", "miss my"], "grief", 0.8),
+  ...group(["hopeless", "no hope"], "hope", 1), ...group(["hopeful", "despair"], "hope", 0.9), ...group(["hope", "give up", "giving up"], "hope", 0.8),
+  ...group(["forgiveness", "repent", "repentance"], "forgiveness", 0.9), ...group(["forgive", "forgive me", "sinned"], "forgiveness", 0.8),
+  ...group(["sin", "sins"], "forgiveness", 0.7),
+  ...group(["alone", "lonely", "loneliness", "isolated", "no friends"], "loneliness", 0.9), ...group(["left out"], "loneliness", 0.8),
+  ...group(["nobody"], "loneliness", 0.7),
+  ...group(["lost my temper", "losing my temper", "so angry", "so mad"], "anger", 1),
+  ...group(["angry", "anger", "furious", "rage", "raging", "livid", "fuming", "mad at", "pissed off"], "anger", 0.9),
+  ...group(["frustrated", "frustration", "annoyed", "irritated", "resentment", "resentful", "bitter"], "anger", 0.8),
+];
+
+function normalise(text) {
+  return text.toLowerCase().replace(/[’‘`']/g, "").replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean).join(" ");
+}
+
+// Returns the winner plus the details the demo draws: which tokens matched and which were negated.
+function explain(input) {
+  const tokens = normalise(input).split(" ").filter(Boolean);
+  const scores = new Map();
+  const hit = new Set(), neg = new Set(), negators = new Set();
+  for (const m of MAPPINGS) {
+    const kw = normalise(m.keyword).split(" ").filter(Boolean);
+    for (let i = 0; i + kw.length <= tokens.length; i++) {
+      if (!kw.every((w, k) => tokens[i + k] === w)) continue;
+      const windowStart = Math.max(0, i - NEGATION_WINDOW);
+      const negIdx = tokens.slice(windowStart, i).findIndex((t) => NEGATORS.has(t));
+      const span = kw.map((_, k) => i + k);
+      if (negIdx === -1) {
+        scores.set(m.category, (scores.get(m.category) || 0) + m.weight);
+        span.forEach((j) => hit.add(j));
+      } else {
+        span.forEach((j) => neg.add(j));
+        negators.add(windowStart + negIdx);
+      }
+    }
+  }
+  let best = null, bestScore = 0;
+  for (const [c, s] of scores) if (s > bestScore) { best = c; bestScore = s; }
+  return { tokens, scores, best, hit, neg, negators };
+}
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function render() {
+  const r = explain($("feel").value);
+  $("verdict").innerHTML = r.best ? `Feeling: <span>${r.best}</span>` : "No match: the app offers “browse by feeling”";
+  $("tokens").innerHTML = r.tokens.map((t, i) => {
+    const cls = r.hit.has(i) ? "hit" : r.neg.has(i) ? "neg" : r.negators.has(i) ? "negator" : "";
+    return `<span class="tok ${cls}">${esc(t)}</span>`;
+  }).join("");
+  const rows = [...r.scores].sort((a, b) => b[1] - a[1]);
+  const max = rows.length ? rows[0][1] : 1;
+  $("bars").innerHTML = rows.map(([c, s]) =>
+    `<div class="bar ${c === r.best ? "" : "lose"}"><span>${c}</span><span class="track"><span class="fill" style="width:${(s / max) * 100}%;display:block"></span></span><span class="n">${s.toFixed(1)}</span></div>`
+  ).join("");
+}
+
+const examples = ["I'm not sad, just really anxious about my exams", "I lost my job and I'm so stressed", "I lost someone close to me", "I can't sleep at night", "I'm not angry, just really sad", "the weather is nice"];
+$("chips").innerHTML = examples.map((e, i) => `<button type="button" data-i="${i}">${esc(e)}</button>`).join("");
+$("chips").addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  $("feel").value = examples[+b.dataset.i]; render();
+});
+$("feel").addEventListener("input", render);
+render();
+</script>
+</body>
+</html>
