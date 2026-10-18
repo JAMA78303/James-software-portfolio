@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="James, software engineer. Web apps and iPhone apps built with Next.js, Supabase, Stripe and SwiftUI.">
+<meta name="description" content="James, software engineer. Web and mobile apps built with Next.js, Supabase, Stripe, SwiftUI and React Native.">
 <title>Built by James</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,11 +141,11 @@ footer { font: 400 13px var(--mono); color: var(--muted); display: flex; flex-wr
 <div class="wrap">
   <header>
     <div class="topbar">
-      <div class="kicker">Software engineer · Web &amp; iOS</div>
+      <div class="kicker">Software engineer · Web &amp; mobile</div>
       <button class="copy" id="themeBtn" type="button" aria-label="Switch colour theme">Dark mode</button>
     </div>
     <h1>James<span>.</span><br>Things I've built.</h1>
-    <p class="lede">I build web apps and iPhone apps end to end: product, design, database and payments. A lot of what I make serves Muslim users, and most of it is built with Next.js, Supabase, Stripe and SwiftUI.</p>
+    <p class="lede">I build web and mobile apps end to end: product, design, database and payments. A lot of what I make serves Muslim users, and most of it is built with Next.js, Supabase, Stripe and SwiftUI.</p>
     <p class="lede">Below is everything I've worked on, from live products to prototypes. If you'd like to work together on a site, product or landing page, get in touch.</p>
     <div class="contact">
       <span class="email"><span id="addr">omarmach1996@gmail.com</span><button class="copy" id="copyBtn" type="button">Copy</button></span>
@@ -166,7 +166,7 @@ footer { font: 400 13px var(--mono); color: var(--muted); display: flex; flex-wr
     <h2 id="about-h">About</h2>
     <div class="about-body">
       <p>I'm James, a software engineer who likes taking an idea all the way to something people can use. I enjoy the whole job: working out what to build, designing it, writing the code, and getting it live.</p>
-      <p>Most days I work in Next.js, TypeScript, Supabase and Stripe on the web, and SwiftUI on iPhone. I care about clear design, solid engineering and products that help real people, especially Muslim users who are often an afterthought.</p>
+      <p>Most days I work in Next.js, TypeScript, Supabase and Stripe on the web, and SwiftUI and React Native on mobile. I care about clear design, solid engineering and products that help real people, especially Muslim users who are often an afterthought.</p>
     </div>
   </section>
 
@@ -199,6 +199,18 @@ const projects = [
     ],
     stack: ["Next.js", "Supabase", "pgvector", "Tailwind", "Vitest"],
     links: [["GitHub", "https://github.com/JAMA78303/dua-ayah-companion"]]
+  },
+  {
+    name: "Greetings From", tag: "Postcard camera", kind: "ios", kindLabel: "iPhone & Android app", status: "build",
+    desc: "A camera app that turns the photo you just took into a vintage postcard, ready to share in one tap.",
+    points: [
+      "Front: \u201CGreetings from\u201D in retro script, with the place name in big 3D block letters and your photo showing through them",
+      "Back: write a message in handwriting; the place, date, postmark and a landmark stamp for 10 countries fill themselves in",
+      "3D card flip, pinch and drag to arrange, a gallery of saved postcards, and export of front, back or both",
+      "No backend: photos never leave the phone"
+    ],
+    stack: ["React Native", "Expo", "TypeScript", "Skia", "Reanimated"],
+    links: []
   },
   {
     name: "Nafas", tag: "نَفَس · Quit vaping", kind: "ios", kindLabel: "iPhone app", status: "build",
@@ -247,13 +259,13 @@ const projects = [
 ];
 
 const statusText = { live: "Live", build: "In progress", proto: "Prototype" };
-const filterDefs = [["all", "All"], ["web", "Web"], ["ios", "iOS"], ["client", "Team"], ["fun", "Experiments"]];
+const filterDefs = [["all", "All"], ["web", "Web"], ["ios", "Mobile"], ["client", "Team"], ["fun", "Experiments"]];
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 const live = projects.filter(p => p.status === "live").length;
 document.getElementById("tally").textContent =
-  `${projects.length} projects · ${projects.filter(p => p.kind !== "ios").length} web · ${projects.filter(p => p.kind === "ios").length} iPhone apps`;
+  `${projects.length} projects · ${projects.filter(p => p.kind !== "ios").length} web · ${projects.filter(p => p.kind === "ios").length} mobile apps`;
 
 const list = document.getElementById("list");
 list.innerHTML = projects.map(p => `
