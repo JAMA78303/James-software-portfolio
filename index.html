@@ -224,36 +224,15 @@ const projects = [
     links: []
   },
   {
-    name: "CancelKit", tag: "Subscription compliance", kind: "web", kindLabel: "Developer tool", status: "build",
-    desc: "A compliance layer that sits beside Stripe Billing and handles the UK's new subscription rules under the DMCC Act 2024.",
-    points: [
-      "Rules engine in plain TypeScript: contract facts in, every legal duty and its deadline out",
-      "Cooling-off refund calculator and a tamper-evident, hash-chained evidence log",
-      "Postgres scheduler with a dead-man's switch, tested with pgTAP"
-    ],
-    stack: ["TypeScript", "Postgres", "Supabase", "pg_cron", "Stripe"],
-    links: [["GitHub", "https://github.com/JAMA78303/cancelkit"]]
-  },
-  {
     name: "AgentZero", tag: "AI for estate agents", kind: "client", kindLabel: "Team project", status: "build",
-    desc: "An AI copilot for Dubai real estate agents that they talk to over WhatsApp.",
+    desc: "An AI copilot for Dubai real estate agents that they talk to over WhatsApp. I joined the team and built these parts:",
     points: [
-      "Assistant runs on Meta's Muse with Claude as the fallback",
-      "Outbound AI voice calls, including calling website callback requests within 60 seconds",
-      "Web console for uploading listings and configuring the agent"
+      "Instant callbacks: when someone asks for a callback on a client's website, an AI voice agent calls them within 60 seconds",
+      "Moved the assistant onto Meta's Muse model, with Claude as an automatic fallback",
+      "Cost tests comparing Muse and Claude on the auto-reply, assistant and copilot features"
     ],
     stack: ["Next.js", "Supabase", "Twilio", "WhatsApp Cloud API", "Vapi"],
     links: [["GitHub", "https://github.com/ShuibCodes/dubai-price-drops-2026-iran-war-v1"]]
-  },
-  {
-    name: "EGM Trading", tag: "Car dealer", kind: "client", kindLabel: "Client website", status: "live",
-    desc: "A mobile-first landing page for a used car dealer, built to turn visits into callback requests.",
-    points: [
-      "Current stock with prices, a sell-your-car section and click-to-call buttons",
-      "Built from a full design handoff, with brand logo, favicons and social share images"
-    ],
-    stack: ["Next.js", "Tailwind v4"],
-    links: [["GitHub", "https://github.com/ShuibCodes/EGM-Trading---landing-page"]]
   },
   {
     name: "Nothing To See Here", tag: "Just for fun", kind: "fun", kindLabel: "Experiment", status: "proto",
@@ -268,13 +247,13 @@ const projects = [
 ];
 
 const statusText = { live: "Live", build: "In progress", proto: "Prototype" };
-const filterDefs = [["all", "All"], ["web", "Web"], ["ios", "iOS"], ["client", "Client & team"], ["fun", "Experiments"]];
+const filterDefs = [["all", "All"], ["web", "Web"], ["ios", "iOS"], ["client", "Team"], ["fun", "Experiments"]];
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 const live = projects.filter(p => p.status === "live").length;
 document.getElementById("tally").textContent =
-  `${projects.length} projects · ${live} live · ${projects.filter(p => p.kind === "ios").length} iPhone apps`;
+  `${projects.length} projects · ${projects.filter(p => p.kind !== "ios").length} web · ${projects.filter(p => p.kind === "ios").length} iPhone apps`;
 
 const list = document.getElementById("list");
 list.innerHTML = projects.map(p => `
