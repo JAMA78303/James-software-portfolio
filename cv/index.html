@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>James CV</title>
+<meta name="description" content="CV of James, software engineer building full-stack web and mobile apps with Next.js, Supabase, Stripe, SwiftUI and React Native.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a one-column CV sheet, A4-friendly; sidebar of skills sits beside experience on wide screens. */
+:root {
+  --bg: #f3f5f2;
+  --paper: #ffffff;
+  --ink: #17201b;
+  --muted: #5c6a62;
+  --line: #d8dfd9;
+  --accent: #0c6b46;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1412; --paper: #161d19; --ink: #e6ece8; --muted: #94a39a; --line: #29332d; --accent: #4fcf93;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1412; --paper: #161d19; --ink: #e6ece8; --muted: #94a39a; --line: #29332d; --accent: #4fcf93;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.55 var(--body); padding: 0 16px; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.bar { max-width: 860px; margin: 0 auto; padding-block: 20px 12px; display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: space-between; align-items: center; font-size: 14px; }
+.bar a { font-weight: 600; text-decoration: none; }
+.bar .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { font: 500 13px var(--body); padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--muted); }
+
+.sheet { max-width: 860px; margin: 0 auto 56px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 48px 52px; display: grid; gap: 30px; }
+header { display: grid; gap: 10px; border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+h1 { font: 800 clamp(38px, 7vw, 56px)/0.95 var(--display); letter-spacing: -0.03em; margin: 0; }
+.role { font: 600 17px var(--body); color: var(--accent); margin: 0; }
+.contact { display: flex; flex-wrap: wrap; gap: 4px 18px; font: 400 13px var(--mono); color: var(--muted); }
+.contact a { color: var(--ink); }
+
+h2 { font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 14px; }
+.summary p { margin: 0; max-width: 68ch; font-size: 16px; }
+
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 36px; }
+.main { display: grid; gap: 30px; min-width: 0; }
+.side { display: grid; gap: 26px; align-content: start; min-width: 0; }
+
+.item { display: grid; gap: 4px; }
+.item + .item { margin-top: 18px; }
+.item-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; align-items: baseline; }
+h3 { font: 700 17px/1.25 var(--display); margin: 0; letter-spacing: -0.01em; }
+h3 small { font: 500 14px var(--body); color: var(--muted); letter-spacing: 0; }
+.when { font: 400 12.5px var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.item p { margin: 0; }
+.item ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 3px; }
+.stack { font: 400 12px var(--mono); color: var(--muted); }
+
+.side ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.side li b { display: block; font: 600 13px var(--body); }
+.side li span { font-size: 14px; color: var(--ink); }
+
+@media (max-width: 720px) {
+  .sheet { padding: 28px 20px; border-radius: 4px; }
+  .cols { grid-template-columns: minmax(0, 1fr); }
+}
+@media print {
+  @page { size: A4; margin: 14mm; }
+  :root { --bg: #fff; --paper: #fff; --ink: #111; --muted: #555; --line: #ccc; --accent: #0c6b46; color-scheme: light; }
+  body { padding: 0; font-size: 9.2pt; line-height: 1.38; }
+  .bar { display: none; }
+  .sheet { border: 0; padding: 0; margin: 0; max-width: none; gap: 14px; }
+  header { padding-bottom: 12px; gap: 6px; }
+  h1 { font-size: 30pt; }
+  .role { font-size: 11pt; }
+  .contact { font-size: 8.5pt; }
+  .summary p { font-size: 9.6pt; max-width: none; }
+  h2 { margin-bottom: 8px; font-size: 8pt; }
+  .cols { grid-template-columns: minmax(0, 1fr) 46mm; gap: 8mm; }
+  .main { gap: 14px; }
+  .side { gap: 14px; }
+  .side ul { gap: 6px; }
+  .side li span { font-size: 9pt; }
+  h3 { font-size: 11pt; }
+  h3 small { font-size: 9pt; }
+  .when { font-size: 8pt; }
+  .stack { font-size: 7.8pt; }
+  .item + .item { margin-top: 9px; }
+  .item ul { gap: 1px; margin-top: 2px; }
+  .item { break-inside: avoid; gap: 2px; }
+  .work { break-before: page; }
+  a { color: inherit; text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<nav class="bar" aria-label="CV">
+  <a href="../">← Portfolio</a>
+  <div class="actions">
+    <a class="btn" href="James-CV.pdf">Download PDF</a>
+  </div>
+</nav>
+
+<main class="sheet">
+  <header>
+    <h1>James</h1>
+    <p class="role">Software Engineer · Full-stack web &amp; mobile</p>
+    <div class="contact">
+      <span>London, UK</span>
+      <a href="mailto:omarmach1996@gmail.com">omarmach1996@gmail.com</a>
+      <a href="https://jama78303.github.io/James-software-portfolio/">jama78303.github.io/James-software-portfolio</a>
+      <a href="https://github.com/JAMA78303">github.com/JAMA78303</a>
+    </div>
+  </header>
+
+  <section class="summary" aria-labelledby="s-profile">
+    <h2 id="s-profile">Profile</h2>
+    <p>Software engineer who builds and ships full-stack products on my own, from the database to the screen. I've built a live meal-planning SaaS with Stripe subscriptions, two iPhone apps, a cross-platform React Native app and a Qur'an companion that answers how you feel. Before software I worked as an HCPC-registered NHS dietitian, so I bring real clinical and nutrition knowledge to health products, plus years of explaining complex things clearly to patients, doctors and teams.</p>
+  </section>
+
+  <div class="cols">
+    <div class="main">
+      <section aria-labelledby="s-projects">
+        <h2 id="s-projects">Projects</h2>
+
+        <div class="item">
+          <div class="item-head"><h3>BiteSync <small>· bitesync.io · live</small></h3><span class="when">2026 – now</span></div>
+          <p>Meal-planning web app that builds recipes, plans the week and writes the grocery list.</p>
+          <ul>
+            <li>Designed and built the whole product: macro-aware planning against a personal TDEE target, meal templates for each goal, and grocery lists</li>
+            <li>Stripe subscriptions and webhooks, Supabase auth with row-level security, and a blog with SEO comparison posts</li>
+            <li>Shipped through 100+ merged pull requests with CI on GitHub</li>
+          </ul>
+          <span class="stack">Next.js · React · TypeScript · Supabase · Stripe · Vercel</span>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Dua &amp; Ayah Companion <small>· web app</small></h3><span class="when">2026 – now</span></div>
+          <p>Users write how they feel and get a matching Qur'anic ayah or dua, with translation and recitation.</p>
+          <ul>
+            <li>Wrote a tested intent matcher that weighs phrases over single words and handles negation, so "I'm not sad" doesn't match sadness</li>
+            <li>Qur'an reader, prayer times and daily adhkar; installable PWA with a content-review workflow and a premium tier enforced in the database</li>
+          </ul>
+          <span class="stack">Next.js · TypeScript · Supabase · Tailwind · Vitest</span>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Greetings From <small>· iPhone &amp; Android</small></h3><span class="when">2026</span></div>
+          <p>Camera app that turns a photo into a vintage postcard: the place name in 3D letters with the photo showing through, and a back that fills in the postmark and a landmark stamp.</p>
+          <ul>
+            <li>Custom drawing with Skia, exported at print resolution; 3D card flip with Reanimated</li>
+            <li>No backend: photos never leave the phone</li>
+          </ul>
+          <span class="stack">React Native · Expo · TypeScript · Skia · Reanimated</span>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Nafas <small>· iPhone app</small></h3><span class="when">2026 – now</span></div>
+          <p>Arabic-first app to help adults quit vapes, cigarettes and shisha, with a Ramadan mode.</p>
+          <ul>
+            <li>Full right-to-left layout, StoreKit 2 subscriptions, and Home and Lock Screen widgets</li>
+            <li>Business logic in plain Swift with unit tests; all data stays on the device</li>
+          </ul>
+          <span class="stack">SwiftUI · StoreKit 2 · WidgetKit · XcodeGen</span>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Practise to Unlock <small>· iPhone &amp; iPad prototype</small></h3><span class="when">2026</span></div>
+          <p>Keeps chosen apps locked until the microphone hears real instrument practice, using Apple's Screen Time APIs and on-device pitch detection.</p>
+          <span class="stack">SwiftUI · Family Controls · AVAudioEngine</span>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>AgentZero <small>· team project</small></h3><span class="when">2026</span></div>
+          <p>WhatsApp AI copilot for Dubai estate agents. My part:</p>
+          <ul>
+            <li>Built instant callbacks: an AI voice agent calls website leads within 60 seconds</li>
+            <li>Moved the assistant onto Meta's Muse model with Claude as a fallback, and wrote cost tests comparing the two</li>
+          </ul>
+          <span class="stack">Next.js · Supabase · Twilio · WhatsApp Cloud API · Vapi</span>
+        </div>
+      </section>
+
+      <section class="work" aria-labelledby="s-work">
+        <h2 id="s-work">Work experience</h2>
+
+        <div class="item">
+          <div class="item-head"><h3>Dietitian <small>· Lewisham University Hospital, NHS</small></h3><span class="when">Aug 2024 – now</span></div>
+          <ul>
+            <li>Run outpatient clinics and inpatient care for complex cases, seeing 50+ patients a week</li>
+            <li>Lead author of the hospital's Refeeding Syndrome Policy, standardising care and improving patient safety</li>
+            <li>Ran audits that found £2,000+ a year in potential savings</li>
+            <li>Teach junior doctors and staff, and supervise dietetic students</li>
+          </ul>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Student Dietitian <small>· Birmingham Community Healthcare</small></h3><span class="when">2022 – 2023</span></div>
+          <p>Clinical placements in a team of 20; ran service audits and delivered presentations to patients and staff.</p>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Nutritionist <small>· Nutrition Enhancement Academy</small></h3><span class="when">2020</span></div>
+          <p>One-to-one nutrition advice and goal setting for clients, in person and online.</p>
+        </div>
+
+        <div class="item">
+          <div class="item-head"><h3>Assistant Manager <small>· The Banc Restaurant</small></h3><span class="when">2013 – 2017</span></div>
+          <p>Managed a team of 15, handled stock and complaints, and helped grow revenue against owner targets.</p>
+        </div>
+      </section>
+    </div>
+
+    <aside class="side">
+      <section aria-labelledby="s-skills">
+        <h2 id="s-skills">Skills</h2>
+        <ul>
+          <li><b>Languages</b><span>TypeScript, JavaScript, Swift, SQL, HTML, CSS, Python</span></li>
+          <li><b>Frontend &amp; mobile</b><span>Next.js, React, React Native, Expo, SwiftUI, Tailwind</span></li>
+          <li><b>Backend &amp; data</b><span>Supabase, Postgres, row-level security, Redis, Convex</span></li>
+          <li><b>Payments &amp; APIs</b><span>Stripe, StoreKit 2, Twilio, WhatsApp Cloud API, Vapi, Resend</span></li>
+          <li><b>AI</b><span>Claude and Meta Muse APIs, AI voice agents</span></li>
+          <li><b>Tools</b><span>Git, GitHub Actions, Vercel, Vitest, Xcode, Figma</span></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="s-edu">
+        <h2 id="s-edu">Education</h2>
+        <ul>
+          <li><b>MSc Dietetics, Merit</b><span>Birmingham City University · 2022 – 2024</span></li>
+          <li><b>BSc Nutrition, 2:1</b><span>University of Hertfordshire · 2017 – 2020</span></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="s-more">
+        <h2 id="s-more">Also</h2>
+        <ul>
+          <li><b>HCPC-registered Dietitian</b></li>
+          <li><b>Languages</b><span>English and Arabic, both fluent</span></li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</main>
+</body>
+</html>
